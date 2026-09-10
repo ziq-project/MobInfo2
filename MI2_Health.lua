@@ -158,6 +158,21 @@ end -- MI2_CalculateHealth()
 -- display the values and percentage for health	/ mana in target frame
 -----------------------------------------------------------------------------
 function MobHealth_Display( )
+	-- (2026-09-10, reported on Project Legacy): ShaguTweaks' "Real Health
+	-- Numbers" module draws its own health/mana text directly on the
+	-- player/target frames now too, at basically the same spot MobInfo2
+	-- uses -- MI2_CheckForSeparateMobHealth's existing same-purpose check
+	-- only recognizes the old standalone "MobHealth" addon's MobHealth_OnLoad
+	-- global, not ShaguTweaks, so both ended up drawing overlapping text
+	-- ("350/350" + "(100%)" from MobInfo2 mashed together with ShaguTweaks'
+	-- own number). Checked live on every call (rather than once at startup)
+	-- so it doesn't matter which addon's SavedVariables/init finishes first.
+	if ShaguTweaks and ShaguTweaks.RealHealthNumbersInstalled then
+		MI2_MobHealthText:SetText( "" )
+		MI2_MobManaText:SetText( "" )
+		return
+	end
+
 	local healthText, manaText
 
 	-- create health and percent text if showing is enabled
