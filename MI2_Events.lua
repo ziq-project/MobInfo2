@@ -64,6 +64,13 @@ local function MI2_MobInfo_Initialize()
 	MI2_ItemNameTable = MI2_ItemNameTable or {}
 	MI2_ZoneTable = MI2_ZoneTable or { cnt = 0 }
 	MI2_ZoneTable.cnt = MI2_ZoneTable.cnt or 0
+	-- MobHealthDB/MobHealthPlayerDB are SavedVariables too (see the .toc) but
+	-- were missing from this guard -- same corrupted-to-nil crash as above,
+	-- just surfacing later, in MobHealth_Set() (MI2_Health.lua) as "attempt
+	-- to index local 'database' (a nil value)" once MI2_Target.healthDB got
+	-- set to one of these nil globals at PLAYER_TARGET_CHANGED.
+	MobHealthDB = MobHealthDB or {}
+	MobHealthPlayerDB = MobHealthPlayerDB or {}
 
 	-- initialize "MobInfoConfig" data structure (main MobInfo config options)
 	MI2_InitOptions()
